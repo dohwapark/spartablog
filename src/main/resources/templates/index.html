@@ -86,7 +86,7 @@
       margin-top: 20px;
     }
     .mybtns > button {
-      margin-right: 10px;
+      margin: auto 5px auto 5px;
     }
     .card div.card-body div.mybtns button.icon-start-edit{
 
@@ -217,8 +217,8 @@
                         <div class="mybtns">
                             <input type="password" class="form-control post-detail-password" id="${id}-inputPassword" placeholder="비밀번호를 입력해주세요"
                                    name="password">
-                            <button id="${id}-edit" class="icon-start-edit" onclick="editPost('${id}')" type="button" >수정하기</button>
-                            <button id="${id}-delete" class="icon-delete" onclick="deleteOne('${id}')" style="margin-left: 10px", style="display: none" type="button" >삭제하기</button>
+                            <button id="${id}-edit" class="icon-start-edit" onclick="editPost('${id}')" type="button" >수정 또는 삭제</button>
+                            <button id="${id}-delete" class="icon-delete" onclick="deleteOne('${id}')" style="display: none" type="button" >삭제하기</button>
                             <button id="${id}-submit" class="icon-end-edit" onclick="submitEdit('${id}')" type="button" style="display: none" >저장하기</button>
                         </div>
                     </div>
