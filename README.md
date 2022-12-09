@@ -24,7 +24,7 @@
  
 
 ## UseCase
-![spartablog_usecase](https://user-images.githubusercontent.com/117057544/206622526-c92bd21d-81c2-4f03-a611-d80a74a6f445.jpg)
+![spartablog_usecase](https://user-images.githubusercontent.com/117057544/206622773-b6667e50-df10-47df-bb0c-1146363322c1.jpg)
 
 
 ## API 명세서
