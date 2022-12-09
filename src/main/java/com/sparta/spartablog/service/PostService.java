@@ -28,7 +28,8 @@ public class PostService {
     @Transactional
     public List<Post> getPosts() {
 
-        return postRepository.findAllByOrderByModifiedAtDesc();
+//        return postRepository.findAllByOrderByModifiedAtDesc();
+        return postRepository.findAllByOrderByCreatedAtDesc();
     }
     // 메모 조회하기
 
