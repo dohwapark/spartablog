@@ -25,14 +25,14 @@ public class Timestamped {
 //    @CreatedDate // 생성일자임을 나타냅니다.
 //    private LocalDateTime createdAt;        // LocalDateTime은 시간을 나타내는 자료형
 //
-//    @LastModifiedDate // 마지막 수정일자임을 나타냅니다.
-//    private LocalDateTime modifiedAt;
+    @LastModifiedDate // 마지막 수정일자임을 나타냅니다.
+    private LocalDateTime modifiedAt;
 
     @CreatedDate // 생성일자임을 나타냅니다.
     private LocalDateTime createdAt;        // LocalDateTime은 시간을 나타내는 자료형
 
-    @LastModifiedDate // 마지막 수정일자임을 나타냅니다.
-    private String modifiedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+//    @LastModifiedDate // 마지막 수정일자임을 나타냅니다.
+//    private String modifiedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
 
 }
 

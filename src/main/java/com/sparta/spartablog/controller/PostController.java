@@ -2,15 +2,22 @@ package com.sparta.spartablog.controller;
 
 
 import com.sparta.spartablog.dto.PostRequestDto;
+import com.sparta.spartablog.dto.PostResponseDto;
+import com.sparta.spartablog.dto.ResponseDto;
 import com.sparta.spartablog.entity.Post;
 import com.sparta.spartablog.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 
-@RestController
+
+@Controller
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class PostController {
 
@@ -22,13 +29,13 @@ public class PostController {
 //    }
 
     @PostMapping("/posts")
-    public Post createPost(@RequestBody PostRequestDto requestDto) {
-        return postService.createPost(requestDto);
+    public Post createPost(@RequestBody PostRequestDto requestDto, HttpServletRequest request) {
+        return postService.createPost(requestDto, request);
     }
     // 메모 생성하기
 
     @GetMapping("/posts")
-    public List<Post> getPosts() {
+    public List<PostResponseDto> getPosts() {
 
         return postService.getPosts();
     }
@@ -43,14 +50,14 @@ public class PostController {
 
 
     @PutMapping("/posts/{id}")
-    public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
-        return postService.update(id, requestDto);
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, HttpServletRequest request) {
+        return postService.update(id, requestDto, request);
     }
     // 메모 수정하기
 
-    @DeleteMapping("/posts/{id}")
-    public Long deletePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto) {
-        return postService.deletePost(id, requestDto);
+    @DeleteMapping("posts/{id}")
+    public ResponseDto deletePost(@PathVariable Long id, HttpServletRequest request) {
+        return postService.deletePost(id, request);
     }
     // 메모 삭제하기
 

@@ -4,12 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+//@NoArgsConstructor
 public class PostRequestDto {
 
-    private String username;
+
     private String contents;
     private String title;
-    private String password;
 
 }
