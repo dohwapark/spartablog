@@ -17,6 +17,32 @@
   <title>스파르타 블로그</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+<!--  <script th:inline="javascript">-->
+<!--    function deleteOne(id, username) {-->
+
+
+
+<!--      $.ajax({-->
+<!--                type: "DELETE",-->
+<!--                url: `/api/posts/${id}`,-->
+<!--                contentType: "application/json",-->
+
+
+<!--                beforeSend: function (xhr) {-->
+<!--                  xhr.setRequestHeader("Authorization", auth);-->
+<!--                },-->
+<!--                success: function (response) {-->
+
+
+<!--                  alert('메시지 삭제에 성공하였습니다.');-->
+<!--                  window.location.reload();-->
+
+<!--                }-->
+<!--              }-->
+<!--      )-->
+<!--    }-->
+<!--  </script>-->
+
 
 
 
@@ -25,9 +51,10 @@
 <body>
 <div class="mytitle" style="position:relative;">
   <!--headr 추가 부분-->
-  <div id="login-true" style="display: none">
+  <div id="login-true" >
     <div id="header-title-login-user">SPARTA's BLOG</div>
     <button id="write-button" onclick="open_box()">소식 기록하기</button>
+<!--    <div th:text="|${username} 님 반갑습니다.|"></div>-->
     <a id="login-text" href="javascript:logout()">
       로그아웃
     </a>
@@ -52,6 +79,7 @@
 <div class="mypost" id="post-box">
 <!--  <div class="form-floating mb-3">-->
 <!--    <input id="inputUsername" type="text" class="form-control" placeholder="이름" name="username">-->
+<!--    <input id="username" type="text" class="form-control" placeholder="이름" th:value="${username}" readonly>-->
 <!--    <label>이름</label>-->
 <!--  </div>-->
 <!--  <div class="form-floating mb-3">-->

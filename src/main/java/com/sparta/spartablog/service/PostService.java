@@ -1,9 +1,6 @@
 package com.sparta.spartablog.service;
 
-
-import com.sparta.spartablog.dto.PostRequestDto;
-import com.sparta.spartablog.dto.PostResponseDto;
-import com.sparta.spartablog.dto.ResponseDto;
+import com.sparta.spartablog.dto.*;
 import com.sparta.spartablog.entity.Post;
 import com.sparta.spartablog.entity.User;
 import com.sparta.spartablog.entity.UserRoleEnum;
@@ -33,7 +30,7 @@ public class PostService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public Post createPost(PostRequestDto requestDto, HttpServletRequest request) {
+    public PostResponseDto createPost(PostRequestDto requestDto, HttpServletRequest request) {
         // Request에서 Token 가져오기
         String token = jwtUtil.resolveToken(request);  //bearer 부분 떼고 암호화된 부분만 token에 넣음
         Claims claims;
@@ -56,11 +53,15 @@ public class PostService {
 //            boardRepository.saveAndFlush(boardPost);
 
             //DB에 저장할 Board 객체 만들기
+
             Post post = new Post(requestDto, user);
             postRepository.saveAndFlush(post);
 
-            return post;
-        } else {
+//            Post post = postRepository.saveAndFlush(new Post(requestDto, user.getId()));
+
+            return new PostResponseDto(post);
+        }
+        else {
             return null;
         }
     }
@@ -68,16 +69,25 @@ public class PostService {
 //        postRepository.save(post);
 //        return post;
 //    }
+
     // 메모 생성하기
+
+
 
 
     @Transactional
     public List<PostResponseDto> getPosts() {
 
-//        return postRepository.findAllByOrderByModifiedAtDesc();
         List<PostResponseDto> postListResponseDto = new ArrayList<>();
-        List<Post> postlist = postRepository.findAllByOrderByCreatedAtDesc();
-        return postListResponseDto;
+        List<Post> boardList = postRepository.findAllByOrderByCreatedAtDesc(); //레포지토리에 수정날짜순으로 가져오게 작성했
+
+        for(int i = 0 ; i < boardList.size() ; i++){
+
+            PostResponseDto postResponseDto = new PostResponseDto(boardList.get(i)); //
+
+
+            postListResponseDto.add(postResponseDto);
+        } return postListResponseDto;
     }
     // 메모 조회하기
 
@@ -89,13 +99,13 @@ public class PostService {
     // 메모 상세조회
 
     @Transactional
-    public PostResponseDto update(Long id, PostRequestDto requestDto, HttpServletRequest request) {
+    public Long update(Long id, PostRequestDto requestDto, HttpServletRequest request) {
 //        Memo post = memoRepository.findById(id).orElseThrow(
 //                () -> new IllegalArgumentException("아이디가 존재하지 않습니다.")
 //        );
         String token = jwtUtil.resolveToken(request); //token에 bearer부분 떼고 담기(토큰 유효 검사위함)
         Claims claims;   //토큰 안에 있는 user 정보 담기 위함
-        Optional<Post> postview = postRepository.findById(id);
+        Optional<Post> post = postRepository.findById(id);
 
         if (token != null) {
             if (jwtUtil.validateToken(token)) {       //토큰 유효한지 검증
@@ -115,21 +125,28 @@ public class PostService {
 
             System.out.println("claims.getSubject() : " + claims.getSubject());
 
-            Post post = checkPost(id);
-            if (post.getUsername().equals(user.getUsername()) || role == UserRoleEnum.ADMIN) {
-                post.update(requestDto);
+            Post post1 = postRepository.findById(id).orElseThrow(
+                    () -> new NullPointerException("존재하지 않는 아이디입니다.")
+            );
+            //            Post post = checkPost(id);
+            if (post1.getUsername().equals(user.getUsername()) || role == UserRoleEnum.ADMIN) {
+                post1.update(requestDto);
+            } else {
+                System.out.println("게시글 삭제 권한이 없습니다.");
+                return 0L;
             }
-            return new PostResponseDto(post);
+
 
         } else {
             throw new IllegalArgumentException("게시글 수정 권한이 없습니다.");
         }
 
+        return id;
     }
     // 메모 수정하기
 
     @Transactional
-    public ResponseDto deletePost(Long id, HttpServletRequest request) {
+    public Long deletePost(Long id, HttpServletRequest request) {
 
         String token = jwtUtil.resolveToken(request);
         Claims claims;
@@ -150,15 +167,23 @@ public class PostService {
             UserRoleEnum role = user.getRole();
 
             Post post = checkPost(id);
+//            if (post.getUsername().equals(claims.getSubject()) || role == UserRoleEnum.ADMIN) {
+//                postRepository.deleteById(id);
+//            }
+//            return new ResponseDto("게시물 삭제 성공", HttpStatus.OK.value());
             if (post.getUsername().equals(claims.getSubject()) || role == UserRoleEnum.ADMIN) {
                 postRepository.deleteById(id);
+            } else {
+                System.out.println("게시글 삭제 권한이 없습니다.");
+                return 0L;
             }
-            return new ResponseDto("게시물 삭제 성공", HttpStatus.OK.value());
+//            return new ResponseDto("게시물 삭제 성공", HttpStatus.OK.value());
 
         } else {
             throw new IllegalArgumentException("게시글 삭제 권한이 없습니다.");
         }
         // 메모 삭제하기
+        return id;
     }
 
     private Post checkPost(Long id) {

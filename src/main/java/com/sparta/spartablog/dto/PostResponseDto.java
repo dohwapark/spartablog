@@ -1,5 +1,6 @@
 package com.sparta.spartablog.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sparta.spartablog.entity.Post;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,9 @@ public class PostResponseDto {
     private String title;
     private String username;
     private String contents;
+
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifiedAt;
 
 

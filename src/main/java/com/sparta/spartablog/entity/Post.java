@@ -13,9 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Getter
-@Setter
 @Entity
-@ToString
 @NoArgsConstructor
 public class Post extends Timestamped {
     @Id
@@ -34,24 +32,33 @@ public class Post extends Timestamped {
     private User user;
 
 
-    public Post(String contents, String title) {
-        this.contents = contents;
-        this.title = title;
+    public Post(PostRequestDto requestDto) {
+        this.contents = requestDto.getContents();
+        this.title = requestDto.getTitle();
 
     }
 
 
     public Post(PostRequestDto requestDto, User user) {
+
         super();
-        this.username = user.getUsername();
-        this.contents = requestDto.getContents();
         this.title = requestDto.getTitle();
+        this.contents = requestDto.getContents();
+        this.username = user.getUsername();
         this.user = user;
     }
+//    public Post(PostRequestDto requestDto, Long userId) {
+//
+//
+//        this.title = requestDto.getTitle();
+//        this.contents = requestDto.getContents();
+//        this.id = requestDto.getId();
+//        this.userId = userId;
+//    }
 
-    public void update(PostRequestDto postRequestDto) {
-        this.username = postRequestDto.getTitle();
-        this.contents = postRequestDto.getContents();
+
+    public void update(PostRequestDto requestDto) {
+        this.contents = requestDto.getContents();
     }
 
 

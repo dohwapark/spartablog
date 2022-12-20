@@ -44,6 +44,7 @@
 
         let username = $('#username').val();
         let password = $('#password').val();
+        let email = $('#email').val();
 
         if (username == '') {
             alert('ID를 입력해주세요');
@@ -51,18 +52,22 @@
         } else if(password == '') {
             alert('비밀번호를 입력해주세요');
             return;
+        } else if(email == '') {
+            alert('이메일을 입력해주세요');
+            return;
         }
+
 
 
         $.ajax({
             type: "POST",
             url: `/api/user/login`,
             contentType: "application/json",
-            data: JSON.stringify({username: username, password: password}),
+            data: JSON.stringify({username: username, password: password, email: email}),
             success: function (response, status, xhr) {
                 if(response === 'success') {
                     let host = window.location.host;
-                    let url = host + '/api/post';
+                    let url = host + '/api/';
 
                     document.cookie =
                         'Authorization' + '=' + xhr.getResponseHeader('Authorization') + ';path=/';

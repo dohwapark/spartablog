@@ -1,8 +1,5 @@
+
 let targetId;
-
-
-
-
 
 $(document).ready(function () {
     const auth = getToken();
@@ -22,7 +19,7 @@ function getMessages() {
     $('#posts-box').empty();
     $.ajax({
         type: "GET",
-        url: "/posts",
+        url: "/api/posts",
         data: {},
         success: function (response) {
             for (let i = 0; i < response.length; i++) {
@@ -57,7 +54,7 @@ function makeMessage(id, username, title, modifiedAt) {
 function detailPost(id) {
     $.ajax({
         type: "GET",
-        url: `/posts/${id}`,
+        url: `/api/posts/${id}`,
         data: {},
         success: function (response) {
             let post = response;
@@ -93,10 +90,8 @@ function makePostDetail(id, username, title, contents, modifiedAt) {
                     <div class="card-header">
                         <div class="titledata">
                         제목 :
-                            <span id="${id}-title" class="title">
-                            ${title}
-                            </span>
-                        </div>
+                            <span id="${id}-title" class="title">${title}</span>
+
                     </div>
                     <div class = "card-body">
                         <div class="metadata">
@@ -120,11 +115,10 @@ function makePostDetail(id, username, title, contents, modifiedAt) {
                         </div>
                     </div>
                         <div class="mybtns">
-                            <input type="password" class="form-control post-detail-password" id="${id}-inputPassword" placeholder="비밀번호를 입력해주세요"
-                                   name="password">
-                            <button id="${id}-edit" class="icon-start-edit" onclick="editPost('${id}')" type="button" >수정 또는 삭제</button>
-                            <button id="${id}-delete" class="icon-delete" onclick="deleteOne('${id}')" style="display: none" type="button" >삭제하기</button>
-                            <button id="${id}-submit" class="icon-end-edit" onclick="submitEdit('${id}')" type="button" style="display: none" >저장하기</button>
+
+                            <button id="${id}-edit" class="icon-start-edit" onclick="editPost('${id}', '${username}')" type="button" >수정 또는 삭제</button>
+                            <button id="${id}-delete" class="icon-delete" onclick="deleteOne('${id}', '${username}')" style="display: none" type="button" >삭제하기</button>
+                            <button id="${id}-submit" class="icon-end-edit" onclick="submitEdit('${id}', '${username}')" type="button" style="display: none" >저장하기</button>
                         </div>
                     </div>
                 </td>`;
@@ -160,22 +154,26 @@ function hideEdits(id) {
 
 // 수정내용 저장하기
 function submitEdit(id) {
-    let username = $(`#${id}-username`).text().trim();
+    const auth = getToken();
     let contents = $(`#${id}-textarea`).val().trim();
-    let password = $(`#${id}-inputPassword`).val().trim();
+
+
     if (isValidContents(contents) == false) {
         return;
     }
-    let data = {'username': username, 'password': password, 'contents': contents};
+    let data = {'contents': contents};
 
     $.ajax({
         type: "PUT",
-        url: `/posts/${id}`,
+        url: `/api/posts/${id}`,
         contentType: "application/json",
         data: JSON.stringify(data),
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", auth);
+        },
         success: function (response) {
-            if (response == 0) {
-                alert('비밀번호가 일치하지 않습니다.');
+            if(response == 0){
+                alert('본인의 게시물만 수정 또는 삭제가 가능합니다.');
                 return;
             } else {
                 alert('메시지 변경에 성공하였습니다.');
@@ -198,53 +196,129 @@ function isValidContents(contents) {
     return true;
 }
 
+// function writePost() {
+//
+//     let contents = $('#contents').val();
+//     //
+//     if (isValidContents(contents) == false) {
+//         return;
+//     }
+//
+//     // const auth = getToken();
+//     // let username = [[${username}]]
+//     let title = $('#inputTitle').val();
+//     let data = { 'title': title, 'contents': contents};
+//
+//     $.ajax({
+//         type: "POST",
+//         url: "/api/posts",
+//         contentType: "application/json",
+//         data: JSON.stringify(data),
+//
+//         success: function (response) {
+//             alert('메시지가 성공적으로 작성되었습니다.');
+//             window.location.reload();
+//         }
+//     });
+// }
+
+
 function writePost() {
-
+    /**
+     * modal 뜨게 하는 법: $('#container').addClass('active');
+     * data를 ajax로 전달할 때는 두 가지가 매우 중요
+     * 1. contentType: "application/json",
+     * 2. data: JSON.stringify(itemDto),
+     */
     let contents = $('#contents').val();
-
     if (isValidContents(contents) == false) {
         return;
     }
 
-    // const auth = getToken();
-    let username = "${id}-username";
-    let password = "${id}-username";
-    let title = $('#inputTitle').val();
-    let data = {'username': username, 'title': title, 'password': password, 'contents': contents};
+    const auth = getToken();
 
+
+    let title = $('#inputTitle').val();
+    let data = {'title': title, 'contents': contents};
+
+    // 1. POST /api/memos 에 메모 생성 요청
     $.ajax({
         type: "POST",
-        url: "/posts",
+        url: `/api/posts`,
         contentType: "application/json",
         data: JSON.stringify(data),
-
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", auth);
+        },
         success: function (response) {
+            // 2. 응답 함수에서 modal을 뜨게 하고, targetId 를 reponse.id 로 설정
+
+
             alert('메시지가 성공적으로 작성되었습니다.');
             window.location.reload();
         }
-    });
-}
-
-// 삭제하기
-function deleteOne(id) {
-    let password = $(`#${id}-inputPassword`).val().trim();
-    let data = {'password': password};
-    $.ajax({
-        type: "DELETE",
-        url: `/posts/${id}`,
-        contentType: "application/json",
-        data: JSON.stringify(data),
-        success: function (response) {
-            if (response == 0) {
-                alert('비밀번호가 일치하지 않습니다.');
-                return;
-            } else {
-                alert('메시지 삭제에 성공하였습니다.');
-                window.location.reload();
-            }
-        }
     })
 }
+
+
+// 삭제하기
+// function deleteOne(id) {
+//     const auth = getToken();
+//     let password = $(`#${id}-inputPassword`).val().trim();
+//     let data = {'password': password};
+//     $.ajax({
+//         type: "DELETE",
+//         url: `/api/posts/${id}`,
+//         contentType: "application/json",
+//         data: JSON.stringify(data),
+//         success: function (response) {
+//             if (response == 0) {
+//                 alert('비밀번호가 일치하지 않습니다.');
+//                 return;
+//             } else {
+//                 alert('메시지 삭제에 성공하였습니다.');
+//                 window.location.reload();
+//             }
+//         }
+//     })
+// }
+
+
+function deleteOne(id) {
+
+    // let loginUser = [[${username}]];
+    // if (loginUser !== username) {
+    //     alert("글쓴이만 삭제 가능합니다.");
+    //     return;
+    // }
+    const auth = getToken();
+    // let loginUser = $(`#${id}-username`).val().trim();
+    // let data = {'username': loginUser};
+
+    $.ajax({
+            type: "DELETE",
+            url: `/api/posts/${id}`,
+            contentType: "application/json",
+            // data: JSON.stringify(data),
+
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", auth);
+            },
+            success: function (response) {
+                if(response == 0){
+                    alert('본인의 게시물만 수정 또는 삭제가 가능합니다.');
+                    return;
+                } else {
+                    alert('메시지 삭제에 성공하였습니다.');
+                    window.location.reload();
+                }
+
+            }
+        }
+    )
+}
+
+
 
 function open_box() {
     $('#post-box').show()
