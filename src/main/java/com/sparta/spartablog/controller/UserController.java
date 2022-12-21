@@ -12,40 +12,43 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-@Controller
-
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
 
+    // 회원 가입 페이지
     @GetMapping("/signup")
     public ModelAndView signupPage() {
 
         return new ModelAndView("signup");
     }
 
+    // 로그인 페이지
     @GetMapping("/login")
     public ModelAndView loginPage() {
 
         return new ModelAndView("login");
     }
 
+    // 회원가입
     @PostMapping("/signup")
-    public String signup(SignupRequestDto signupRequestDto) {
+    public String signup(@RequestBody SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
-        return "redirect:/api/user/login";
+//        return "redirect:/api/user/login";
+        return "signup success";
     }
 
 
 
-
+    // 로그인
     @ResponseBody
     @PostMapping("/login")
     public String login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         userService.login(loginRequestDto, response);
-        return "success";
+        return "login success";
     }
 
 }

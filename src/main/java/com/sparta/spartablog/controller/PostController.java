@@ -1,13 +1,9 @@
 package com.sparta.spartablog.controller;
 
 
-import com.sparta.spartablog.dto.PostRequestDto;
-import com.sparta.spartablog.dto.PostResponseDto;
-import com.sparta.spartablog.dto.ResponseDto;
-import com.sparta.spartablog.entity.Post;
+import com.sparta.spartablog.dto.*;
 import com.sparta.spartablog.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,55 +13,76 @@ import javax.servlet.http.HttpServletRequest;
 
 
 //@Controller
-@Controller
+@RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
+    // 메인 페이지
     @GetMapping("/")
     @ResponseBody
     public ModelAndView home() {
         return new ModelAndView("index");
     }
 
+    // 게시글 생성
     @PostMapping("/posts")
     @ResponseBody   /// 이거 쓰니까 글 작성완료 알림창 발생 DB에는 안들어가짐
     public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, HttpServletRequest request) {
         return postService.createPost(requestDto, request);
     }
-    // 메모 생성하기
 
+    // 게시글 리스트 전체 조회
     @GetMapping("/posts")
     @ResponseBody
     public List<PostResponseDto> getPosts() {
 
         return postService.getPosts();
     }
-    // 메모 조회하기
 
-    @GetMapping("/posts/{id}")
+    // 게시글 상세 조회
+    @GetMapping("/posts/detail")
     @ResponseBody
-    public Optional<Post> getPost(@PathVariable Long id){
+    public PostResponseDto getPost(@RequestParam Long id) {
 
         return postService.getPost(id);
     }
-    // 메모 상세조회
 
 
+    // 게시글 수정
     @PutMapping("/posts/{id}")
     @ResponseBody
     public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, HttpServletRequest request) {
+//        return postService.update(id, requestDto, request);
         return postService.update(id, requestDto, request);
     }
-    // 메모 수정하기
 
+
+    // 게시글 삭제
     @DeleteMapping("/posts/{id}")
     @ResponseBody
     public Long deletePost(@PathVariable Long id, HttpServletRequest request) {
         return postService.deletePost(id, request);
     }
-    // 메모 삭제하기
 
+    // 댓글 작성
+    @PostMapping("/comment/{id}")
+    public CommentResponseDto createComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
+        return postService.createComment(id, requestDto, request);
+    }
+
+    // 댓글 수정
+    @PutMapping("/comment/{comment_id}")
+    public CommentResponseDto updateComment(@PathVariable Long comment_id, @RequestBody CommentRequestDto requestDto, HttpServletRequest request) {
+        return postService.updateComment(comment_id, requestDto, request);
+    }
+
+
+    // 댓글 삭제
+    @DeleteMapping("/comment/{comment_id}")
+    public ResponseDto deleteComment(@PathVariable Long comment_id, HttpServletRequest request) {
+        return postService.deleteComment(comment_id, request);
+    }
 }

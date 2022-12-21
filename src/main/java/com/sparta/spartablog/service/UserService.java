@@ -22,7 +22,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EmailRepository emailRepository;
-
     private final JwtUtil jwtUtil;
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
@@ -38,12 +37,7 @@ public class UserService {
         if (found.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
-//        Optional<User> found2 = emailRepository.findByUsername(email);
-//        if (found2.isPresent()) {
-//            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
-//        }
 
-        // 사용자 ROLE 확인
         UserRoleEnum role = UserRoleEnum.USER;
         if (signupRequestDto.isAdmin()) {
             if (!signupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {

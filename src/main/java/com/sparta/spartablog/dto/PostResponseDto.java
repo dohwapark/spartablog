@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Getter
@@ -17,9 +19,11 @@ public class PostResponseDto {
     private String username;
     private String contents;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifiedAt;
+    private List<CommentResponseDto> comments;
 
 
     public PostResponseDto(Post post) {
@@ -29,6 +33,7 @@ public class PostResponseDto {
         this.contents = post.getContents();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
+        this.comments = new ArrayList<>();
     }
 
 }
