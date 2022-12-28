@@ -11,8 +11,8 @@ import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 @Getter
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@MappedSuperclass // 상속했을 때, 컬럼으로 인식
+@EntityListeners(AuditingEntityListener.class) // 생성, 수정시가능을 자동으로 반영
 public class Timestamped {
     @LastModifiedDate // 마지막 수정일자임을 나타냅니다.
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
