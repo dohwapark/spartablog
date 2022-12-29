@@ -28,8 +28,10 @@ public class PostController {
     }
 
     // 게시글 생성
+    // HttpServletRequest 객체가 소멸하기 까지 상태정보를 유지할 때
+    // 한번의 요청으로 실행된 페이지끼리 정보를 공유하고자 할 때 사용
     @PostMapping("/posts")
-    @ResponseBody   /// 이거 쓰니까 글 작성완료 알림창 발생 DB에는 안들어가짐
+    @ResponseBody
     public PostResponseDto createPost(@RequestBody PostRequestDto requestDto, HttpServletRequest request) {
         return postService.createPost(requestDto, request);
     }
@@ -52,6 +54,8 @@ public class PostController {
 
 
     // 게시글 수정
+    // {id} 템플릿 변수
+    // @PathVariable 를 이용해서 템플릿 변수와 동일한 이름을 갖는 파라미터를 추가
     @PutMapping("/posts/{id}")
     @ResponseBody
     public Long updatePost(@PathVariable Long id, @RequestBody PostRequestDto requestDto, HttpServletRequest request) {
