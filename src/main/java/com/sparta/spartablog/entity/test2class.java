@@ -1,5 +1,4 @@
 package com.sparta.spartablog.entity;
 
-public class testclass {
-
+public class test2class {
 }
