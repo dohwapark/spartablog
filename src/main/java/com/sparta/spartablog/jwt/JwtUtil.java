@@ -3,9 +3,8 @@ package com.sparta.spartablog.jwt;
 
 import com.sparta.spartablog.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SecurityException;
 /// 이거이거 위에꺼 부들부들
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
